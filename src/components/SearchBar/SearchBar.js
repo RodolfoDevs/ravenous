@@ -23,12 +23,16 @@ class SearchBar extends React.Component {
     this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
 
+    this.handleSortByChange = this.handleSortByChange.bind(this);
+    this.renderSortByOptions = this.renderSortByOptions.bind(this);
+
     this.sortByOptions = {
       'Best Match': 'best_match',
       'Highest Rated': 'rating',
       'Most Reviewed': 'review_count'
     };
   }
+
 
   getSortByClass(sortByOption) {
     if (this.state.sortBy === sortByOption)
@@ -38,43 +42,47 @@ class SearchBar extends React.Component {
       return '';
   }
 
-  handleSortByChange(sortByOption) {
+  handleSortByChange(event) {
+    //get the sort option selected
+    let sortOptionKey = event.target.innerHTML;
+    //update value of sortBy property of this.state
     this.setState({
-      sortBy: sortByOption
+      sortBy: this.sortByOptions[sortOptionKey]
     });
   }
 
+  //update business type for the search query
   handleTermChange(event) {
     this.setState({
       term: event.target.value
     });
   }
 
+  //update location value for the search query
   handleLocationChange(event) {
     this.setState({
       location: event.target.value
     });
   }
 
+  //search for the requested business based on the term, location, and sort option selected
   handleSearch(event) {
     this.props.searchYelp(this.state.term, this.state.location, this.state.sortBy);
     event.preventDefault();
   }
 
+
   renderSortByOptions() {
-    return
-        Object.keys(this.sortByOptions).map(sortByOption => {
-            let sortByOptionValue = this.sortByOptions[sortByOption];
-            console.log('**********************************');
-            console.log(sortByOptionValue);
-            console.log('**********************************');
-            return (<li className={this.getSortByClass(sortByOptionValue)}
+    return Object.keys(this.sortByOptions).map(sortByOption => {
+      let sortByOptionValue = this.sortByOptions[sortByOption];
+      return (<li className={this.getSortByClass(sortByOptionValue)}
                   key={sortByOptionValue}
-                  onClick={this.handleSortByChange.bind(this, sortByOptionValue)}>
-                      {sortByOption}
-                  </li>);
-      });
+                  onClick={this.handleSortByChange}>
+                {sortByOption}
+             </li>);
+    });
   }
+
 
   render() {
     return (
